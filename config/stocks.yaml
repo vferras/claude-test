@@ -1,4 +1,37 @@
 symbols:
-  - AAPL
-  - MSFT
-  - GOOGL
+  # IBEX 35
+  - SAN.BMEX    # Santander
+  - BBVA.BMEX   # BBVA
+  - ITX.BMEX    # Inditex
+  - IBE.BMEX    # Iberdrola
+  - TEF.BMEX    # Telefónica
+  - REP.BMEX    # Repsol
+  - CABK.BMEX   # CaixaBank
+  - AMS.BMEX    # Amadeus
+  - FER.BMEX    # Ferrovial
+  - ACS.BMEX    # ACS
+  - AENA.BMEX   # Aena
+  - MAP.BMEX    # Mapfre
+  - GRF.BMEX    # Grifols
+  - ENG.BMEX    # Enagás
+  - RED.BMEX    # Redeia (REE)
+  - MEL.BMEX    # Meliá Hotels
+  - SAB.BMEX    # Banco Sabadell
+  - BKT.BMEX    # Bankinter
+  - CLNX.BMEX   # Cellnex
+  - FDR.BMEX    # Fluidra
+  - LOG.BMEX    # Logista
+  - PHM.BMEX    # PharmaMar
+  - IAG.BMEX    # IAG
+  - ELE.BMEX    # Endesa
+  - NTGY.BMEX   # Naturgy
+  - ACX.BMEX    # Acerinox
+  - MTS.BMEX    # ArcelorMittal
+  - COL.BMEX    # Inmob. Colonial
+  - MRL.BMEX    # Merlin Properties
+  - SGRE.BMEX   # Siemens Gamesa
+  - VIS.BMEX    # Viscofan
+  - CIE.BMEX    # CIE Automotive
+  - ROVI.BMEX   # Laboratorios Rovi
+  - UNI.BMEX    # Unicaja
+  - SOL.BMEX    # Solaria

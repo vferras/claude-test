@@ -11,7 +11,7 @@ import (
 	"claude-test/model"
 )
 
-const baseURL = "https://api.marketstack.com/v2/eod"
+const baseURL = "https://api.marketstack.com/v1/eod"
 
 type Client struct {
 	apiKey     string
@@ -27,7 +27,7 @@ type apiEOD struct {
 	High     float64 `json:"high"`
 	Low      float64 `json:"low"`
 	Close    float64 `json:"close"`
-	Volume   int64   `json:"volume"`
+	Volume   float64 `json:"volume"`
 	AdjClose float64 `json:"adj_close"`
 	Symbol   string  `json:"symbol"`
 	Exchange string  `json:"exchange"`
@@ -78,7 +78,7 @@ func (c *Client) FetchEOD(symbols []string, date time.Time) ([]model.EODPrice, e
 			High:     d.High,
 			Low:      d.Low,
 			Close:    d.Close,
-			Volume:   d.Volume,
+			Volume:   int64(d.Volume),
 			AdjClose: d.AdjClose,
 			Exchange: d.Exchange,
 		}

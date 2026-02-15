@@ -26,7 +26,7 @@ func NewEODJob(db *sql.DB, client *marketstack.Client, symbols []string) *EODJob
 func (j *EODJob) Run() {
 	log.Println("EOD job: starting fetch")
 
-	today := time.Now()
+	today := lastTradingDay(time.Now())
 	prices, err := j.client.FetchEOD(j.symbols, today)
 	if err != nil {
 		log.Printf("EOD job: fetch error: %v", err)
@@ -60,6 +60,17 @@ func (j *EODJob) upsert(p model.EODPrice) error {
 
 	_, err := j.db.Exec(query, p.Symbol, p.Date, p.Open, p.High, p.Low, p.Close, p.Volume, p.AdjClose, p.Exchange)
 	return err
+}
+
+func lastTradingDay(t time.Time) time.Time {
+	switch t.Weekday() {
+	case time.Sunday:
+		return t.AddDate(0, 0, -2)
+	case time.Saturday:
+		return t.AddDate(0, 0, -1)
+	default:
+		return t
+	}
 }
 
 func (j *EODJob) Schedule() {
