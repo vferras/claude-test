@@ -6,6 +6,7 @@ import (
 	"os/signal"
 	"syscall"
 
+	"claude-test/api"
 	"claude-test/config"
 	"claude-test/db"
 	"claude-test/job"
@@ -34,6 +35,14 @@ func main() {
 	eodJob := job.NewEODJob(database, client, cfg.Symbols)
 	eodJob.Schedule()
 	log.Println("EOD job scheduled (daily at 22:00)")
+
+	srv := api.NewServer(database, cfg.Port)
+	go func() {
+		log.Printf("HTTP server listening on :%s", cfg.Port)
+		if err := srv.ListenAndServe(); err != nil {
+			log.Printf("HTTP server error: %v", err)
+		}
+	}()
 
 	// Wait for interrupt signal
 	sig := make(chan os.Signal, 1)

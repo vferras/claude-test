@@ -11,6 +11,7 @@ type Config struct {
 	APIKey      string
 	DatabaseURL string
 	Symbols     []string
+	Port        string
 }
 
 type stocksFile struct {
@@ -42,9 +43,15 @@ func Load(yamlPath string) (*Config, error) {
 		return nil, fmt.Errorf("no symbols configured in %s", yamlPath)
 	}
 
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
+	}
+
 	return &Config{
 		APIKey:      apiKey,
 		DatabaseURL: dbURL,
 		Symbols:     sf.Symbols,
+		Port:        port,
 	}, nil
 }
