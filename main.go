@@ -35,6 +35,10 @@ func main() {
 	eodJob.Schedule()
 	log.Println("EOD job scheduled (daily at 22:00)")
 
+	intradayJob := job.NewIntradayJob(database, client, cfg.Symbols)
+	intradayJob.Schedule()
+	log.Println("Intraday job scheduled (daily at 22:00)")
+
 	srv := api.NewServer(database, cfg.Port)
 	go func() {
 		log.Printf("HTTP server listening on :%s", cfg.Port)
