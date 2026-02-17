@@ -11,7 +11,7 @@ import (
 	"claude-test/model"
 )
 
-const baseURL = "https://api.marketstack.com/v1/eod"
+const baseURL = "http://api.marketstack.com/v1/eod"
 
 type Client struct {
 	apiKey     string
@@ -44,13 +44,19 @@ func NewClient(apiKey string) *Client {
 }
 
 func (c *Client) FetchEOD(symbols []string, date time.Time) ([]model.EODPrice, error) {
-	dateStr := date.Format("2006-01-02")
+	return c.FetchEODRange(symbols, date, date)
+}
+
+func (c *Client) FetchEODRange(symbols []string, from, to time.Time) ([]model.EODPrice, error) {
+	fromStr := from.Format("2006-01-02")
+	toStr := to.Format("2006-01-02")
 
 	params := url.Values{}
 	params.Set("access_key", c.apiKey)
 	params.Set("symbols", strings.Join(symbols, ","))
-	params.Set("date_from", dateStr)
-	params.Set("date_to", dateStr)
+	params.Set("date_from", fromStr)
+	params.Set("date_to", toStr)
+	params.Set("limit", "1000")
 
 	reqURL := fmt.Sprintf("%s?%s", baseURL, params.Encode())
 
@@ -69,9 +75,13 @@ func (c *Client) FetchEOD(symbols []string, date time.Time) ([]model.EODPrice, e
 		return nil, fmt.Errorf("decoding marketstack response: %w", err)
 	}
 
-	prices := make([]model.EODPrice, len(apiResp.Data))
-	for i, d := range apiResp.Data {
-		prices[i] = model.EODPrice{
+	var prices []model.EODPrice
+	for _, d := range apiResp.Data {
+		dateStr := d.Date
+		if len(dateStr) >= 10 {
+			dateStr = dateStr[:10]
+		}
+		prices = append(prices, model.EODPrice{
 			Symbol:   d.Symbol,
 			Date:     dateStr,
 			Open:     d.Open,
@@ -81,7 +91,7 @@ func (c *Client) FetchEOD(symbols []string, date time.Time) ([]model.EODPrice, e
 			Volume:   int64(d.Volume),
 			AdjClose: d.AdjClose,
 			Exchange: d.Exchange,
-		}
+		})
 	}
 
 	return prices, nil

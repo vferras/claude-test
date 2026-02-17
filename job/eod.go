@@ -44,6 +44,26 @@ func (j *EODJob) Run() {
 	log.Println("EOD job: completed")
 }
 
+func (j *EODJob) Backfill(from, to time.Time) {
+	log.Printf("Backfill: fetching %s to %s", from.Format("2006-01-02"), to.Format("2006-01-02"))
+
+	prices, err := j.client.FetchEODRange(j.symbols, from, to)
+	if err != nil {
+		log.Printf("Backfill: fetch error: %v", err)
+		return
+	}
+
+	log.Printf("Backfill: fetched %d prices", len(prices))
+
+	for _, p := range prices {
+		if err := j.upsert(p); err != nil {
+			log.Printf("Backfill: upsert error for %s on %s: %v", p.Symbol, p.Date, err)
+		}
+	}
+
+	log.Println("Backfill: completed")
+}
+
 func (j *EODJob) upsert(p model.EODPrice) error {
 	query := `
 		INSERT INTO eod_prices (symbol, date, open, high, low, close, volume, adj_close, exchange)
